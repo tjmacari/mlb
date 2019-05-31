@@ -1,0 +1,21 @@
+@import '~Styles/partials/all';
+
+/* Namespace rules under .game-navigator class */
+.game-navigator {
+    height: 300px;
+    left: 0;
+    margin-top: -150px;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    white-space: nowrap;
+    width: 100%;
+
+    .game-items {
+        left: 50px;
+        margin-left: 0;
+        position: absolute;
+        top: 0;
+    }
+}

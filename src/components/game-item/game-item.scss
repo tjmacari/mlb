@@ -1,0 +1,54 @@
+@import '~Styles/partials/all';
+
+/* Namespace rules under .game-item class */
+.game-item {
+    display: inline-block;
+    height: 90px;
+    margin-right: 20px;
+    vertical-align: top;
+    width: 160px;
+
+    .headline, .desc {
+        margin: 1rem 0;
+        text-align: center;
+        text-shadow: 0 5px 10px #000;
+        word-break: break-word;
+        white-space: pre-wrap;
+        visibility: hidden;
+    }
+
+    .headline {
+        font-size: 0.95rem;
+        font-weight: 600;
+        height: 55px;
+        overflow: hidden;
+    }
+
+    .box {
+        background-image: linear-gradient($light-gray, $med-gray);
+        background-repeat: no-repeat;
+        background-size: cover;
+        border: 1px solid $light-gray;
+        box-shadow: 0 5px 10px #000;
+        height: 100%;
+        width: 100%;
+    }
+
+    .desc {
+        font-size: 0.65rem;
+    }
+
+    &.focus {
+
+        height: 135px;
+        margin-top: -10px;
+        width: 240px;
+
+        .headline, .desc {
+            visibility: visible;
+        }
+        .box {
+            border-color: $highlight;
+        }
+    }
+}
