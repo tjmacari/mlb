@@ -1,5 +1,15 @@
 $bold: 600;
 
+/*
+ * Mixins, these can be injected into any CSS rule
+ */
+
+/* Give boxes round corners */
+@mixin corners {
+    border-radius: 5px;
+}
+
+/* Absolute positioning */
 @mixin full-absolute {
     position: absolute;
     top: 0;

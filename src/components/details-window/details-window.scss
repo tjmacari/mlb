@@ -1,0 +1,33 @@
+@import '~Styles/partials/all';
+
+$contentPadding: 80px;
+
+.details-window {
+    background-color: rgba(0, 0, 20, 0.75);
+    @include full-absolute;
+
+    .content {
+        bottom: $contentPadding;
+        height: inherit;
+        left: $contentPadding;
+        overflow: hidden;
+        position: absolute;
+        right: $contentPadding;
+        top: $contentPadding;
+        width: inherit;
+
+        .headline {
+            background-color: rgba(0, 0, 20, 0.65);
+            bottom: 0;
+            font-size: 3rem;
+            font-weight: $bold;
+            left: 0;
+            padding: 1.5rem;
+            position: absolute;
+            right: 0;
+            text-align: center;
+            text-shadow: 0 5px 10px #000;
+            top: 50%;
+        }
+    }
+}

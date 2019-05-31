@@ -17,8 +17,6 @@ class GameItem extends Component {
     }
 
     render(parent) {
-
-        // Create base, add as child to parent element
         this.base = this.createElem("game-item");
         parent.append(this.base);
 
@@ -37,17 +35,12 @@ class GameItem extends Component {
             this.base.append(item.elem); // Add to parent
         });
 
-        let headlineText = "(Recap still pending)";
-
         const d = this.data;
-
-        console.log(d);
-
         const recapData = d.editorial.recap.mlb;
 
         // Apply headline
         const headline = elementsList[0].elem;
-        headline.innerHTML = recapData.subhead;
+        headline.innerHTML = recapData.headline;
 
         // Apply image
         const box = elementsList[1].elem;
@@ -56,7 +49,7 @@ class GameItem extends Component {
 
         // Apply desc
         const desc = elementsList[2].elem;
-        desc.innerHTML = recapData.image.title;
+        desc.innerHTML = recapData.subhead;
     }
 }
 export default GameItem;

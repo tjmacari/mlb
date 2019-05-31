@@ -24,16 +24,6 @@
         overflow: hidden;
     }
 
-    .box {
-        background-image: linear-gradient($light-gray, $med-gray);
-        background-repeat: no-repeat;
-        background-size: cover;
-        border: 1px solid $light-gray;
-        box-shadow: 0 5px 10px #000;
-        height: 100%;
-        width: 100%;
-    }
-
     .desc {
         font-size: 0.65rem;
     }

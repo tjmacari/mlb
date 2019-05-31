@@ -2,9 +2,11 @@ import Component from 'Components/component';
 import LoadJSON from 'Components/loadjson/loadjson';
 
 import './game-navigator.scss';
-import GameItem from '../game-item/game-item';
+import GameItem from 'Components/game-item/game-item';
+import DetailsWindow from 'Components/details-window/details-window';
 
 class GameNavigator extends Component {
+
     constructor() {
         super(); // Must call in order to access parent scope / parent methods
 
@@ -16,6 +18,7 @@ class GameNavigator extends Component {
         this.gameItems = [];
     }
 
+    // Only completed games with recaps will show up
     _loadTodaysGames() {
         const date = new Date(); // Get today's date
 
@@ -28,7 +31,10 @@ class GameNavigator extends Component {
         return `http://statsapi.mlb.com/api/v1/schedule?hydrate=game(content(editorial(recap))),decisions&date=${year}-${month}-${dayOfMonth}&sportId=1`;
     }
 
+    // Use JSON info and start loading game items
     _loadGames(data, gameItems) {
+
+        // If data is data from json is valid, start building game items
         if(data && data.dates && data.dates.length > 0 && data.dates[0].games) {
             const games = data.dates[0].games;
 
@@ -45,18 +51,21 @@ class GameNavigator extends Component {
                     this.gameItems.push(gameItem);
                 }
             });
-
-            // Set focus to first thumbnail
-            this._setIndex(0);
-
         } else {
             console.error("No games found for this date");
         }
 
+        // When user hits 'enter', show game details window
+        this._createDetailsWindow();
+
         // Listen for keyboard events, apply navigation based on left/right arrow, see details if user hits enter
         this._setKeyboardInput();
+
+        // Set focus to first thumbnail
+        this._setIndex(0);
     }
 
+    // Decrement to previous game
     _prevGame() {
         let newIndex = this.currIndex - 1;
         if(newIndex < 0) {
@@ -65,6 +74,7 @@ class GameNavigator extends Component {
         this._setIndex(newIndex);
     }
 
+    // Increment to next game item
     _nextGame() {
         let newIndex = this.currIndex + 1;
         if(newIndex > this.gameItems.length -1) {
@@ -73,8 +83,15 @@ class GameNavigator extends Component {
         this._setIndex(newIndex);
     }
 
-    _gameDetails() {
+    // Toggle details window on/off
+    _toggleGameDetails() {
+        this.detailsWindow.toggleActive();
+    }
 
+    // Update the image, info displayed in details window
+    _updateDetailsWindow() {
+        const game = this.gameItems[this.currIndex]; // Grab correct game based on current index
+        this.detailsWindow.update(game.data); // Call update function
     }
 
     _setIndex(index) {
@@ -91,10 +108,14 @@ class GameNavigator extends Component {
         const currGameElem = this.gameItems[this.currIndex].getBase();
         currGameElem.classList.add('focus'); // Remove focus from old item
 
+        // Update detail pane
+        this._updateDetailsWindow();
+
         // Animate our games!
         this._animateGames(index);
     }
 
+    // Apply left/right/enter keyboard keys
     _setKeyboardInput() {
         document.onkeydown = (e) => {
             if(e.keyCode === 37) {
@@ -105,7 +126,7 @@ class GameNavigator extends Component {
                 this._nextGame();
             } else if(e.keyCode == 13) {
                 // Enter Key
-                this._gameDetails();
+                this._toggleGameDetails();
             }
         };
     }
@@ -123,9 +144,17 @@ class GameNavigator extends Component {
         gameItemsElem.style.marginLeft = `${finalLeft}px`;
     }
 
+    _createDetailsWindow() {
+        // #app element tag
+        const appTag = document.querySelector('#app');
+
+        // Initialise DetailsWindow class, pass in parent dom element as container
+        this.detailsWindow = new DetailsWindow();
+        this.detailsWindow.render(appTag);
+    }
+
     // Load JSON and use data to populate thumbnails
     render(parent) {
-
         this.base = this.createElem("game-navigator");
         parent.append(this.base);
 
