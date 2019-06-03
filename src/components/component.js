@@ -14,8 +14,6 @@ class Component {
             elem.classList.add(classStr);
         });
 
-        console.log(elem);
-
         // Append to parent
         parent.append(elem);
 

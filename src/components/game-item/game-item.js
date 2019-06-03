@@ -36,11 +36,14 @@ class GameItem extends Component {
 
             // Get recap data
             const mlb = d.recap.mlb;
+
+            // Get date, will add this to desc below
+            const dateStr = new Date(mlb.date).toDateString(); // ie: Wed May 29 2019
             
             // Grab info for headline, background image, and description
             const headlineStr = mlb.headline;
             const imageUrl = mlb.image.cuts[0].src;
-            const descStr = mlb.subhead || mlb.image.title; // Some recaps do not have a subhead, so default to image text
+            const descStr = `${dateStr}<br/><br/>${mlb.subhead || mlb.image.title}`; // Some recaps do not have a subhead, so default to image text
 
             // Apply headline
             const headline = elementsList[0].elem; // Reference DOM element

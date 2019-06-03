@@ -23,11 +23,13 @@ class DetailsWindow extends Component {
 
     // Update content in details window
     update(gameInfo) {
+        const recap = gameInfo.editorial.recap.mlb;
 
-        // Get image url, headline string, and blurb text
-        const imgUrl = gameInfo.editorial.recap.mlb.image.cuts[0].src;
-        const headlineStr = gameInfo.editorial.recap.mlb.headline;
-        const blurbStr = gameInfo.editorial.recap.mlb.blurb;
+        // Get date, image url, headline string, and blurb text
+        const dateStr = new Date(recap.date).toDateString(); // ie: Wed May 29 2019
+        const imgUrl = recap.image.cuts[0].src;
+        const headlineStr = recap.headline;
+        const blurbStr = `${dateStr}<br/><br/>${recap.blurb}`;
 
         // Background image
         this.setBgImage(this.content, imgUrl);
