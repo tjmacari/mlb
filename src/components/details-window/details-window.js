@@ -1,18 +1,19 @@
+// Import common abstract parent
 import Component from 'Components/component';
 
+// Add styling
 import './details-window.scss';
 
 class DetailsWindow extends Component {
     constructor() {
         super(); // Must call in order to access parent scope / parent methods
 
-        this.isActive = false;
+        this.isActive = false; // Default to not active
     }
 
-    // Show/hide details window
+    // Toggle details window
     toggleActive() {
         this.isActive = !this.isActive;
-
         if(this.isActive) {
             this.base.classList.remove('hide');
         } else {
@@ -20,27 +21,40 @@ class DetailsWindow extends Component {
         }
     }
 
+    // Update content in details window
     update(gameInfo) {
+
+        // Get image url, headline string, and blurb text
+        const imgUrl = gameInfo.editorial.recap.mlb.image.cuts[0].src;
+        const headlineStr = gameInfo.editorial.recap.mlb.headline;
+        const blurbStr = gameInfo.editorial.recap.mlb.blurb;
+
         // Background image
-        const img = gameInfo.editorial.recap.mlb.image.cuts[0].src;
-        this.content.style.backgroundImage = `url(${img})`; // Details window
+        this.setBgImage(this.content, imgUrl);
 
         // Apply headline
-        this.headline.innerHTML = gameInfo.editorial.recap.mlb.headline;
+        this.applyContent(this.headline, headlineStr);
+
+        // Apply blurb
+        this.applyContent(this.blurb, blurbStr);
     }
 
+    // Create DOM elements
     render(parent) {
-        this.base = this.createElem("details-window");
-        this.base.classList.add("hide");
-        parent.append(this.base);
+        // Base container for details window
+        this.base = this.createElem(["details-window", "hide"], parent);
 
-        this.content = this.createElem("box");
-        this.content.classList.add("content");
-        this.base.append(this.content);
+        // Content with BG image and text
+        this.content = this.createElem(["box", "content"], this.base);
 
-        this.headline = this.createElem("headline");
-        this.content.append(this.headline);
+        // Text pane/container
+        this.textPane = this.createElem(["text-pane"], this.content);
 
+        // Headline
+        this.headline = this.createElem(["headline"], this.textPane);
+
+        // Blurb
+        this.blurb = this.createElem(["blurb"], this.textPane);
     }
 }
 export default DetailsWindow;

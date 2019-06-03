@@ -18,17 +18,32 @@ class GameNavigator extends Component {
         this.gameItems = [];
     }
 
-    // Only completed games with recaps will show up
-    _loadTodaysGames() {
+    /*
+        Only completed games with recaps will show up
+        PST is 7 hours ahead of GMT, ie: 4PM PST == 11PM GMT
+        With that in mind, unless it's between 8PM-12AM PST (3AM-7AM GMT), show yesterday's games
+    */
+    _loadGamesData() {
+
         const date = new Date(); // Get today's date
 
-        // Get year, month, day of month from today's date object
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1; // Month is base-0 so add 1
-        const dayOfMonth = date.getDate() - 1;
+        // Since we deal with multiple times zones, let's work with GMT
+        const gmtYear = date.getUTCFullYear();
+        const gmtMonth = date.getUTCMonth() + 1;
+        const gmtHourOfDay = date.getUTCHours();
+        const earliestHour = 3; // 3AM GMT (8PM PST)
+        const latestHour = 7; // 7AM GMT (12AM PST)
+
+        // In this case, worth spelling it out instead of ternary operator for ease of reading
+        let daysAgo = 1; // Default to yesterday to get full slate of games
+        if(gmtHourOfDay >= earliestHour && gmtHourOfDay < latestHour) {
+            daysAgo = 0; // Since we are between 8PM - 12AM PST, we can roll with games from today
+        }
+
+        const gmtDayOfMonth = date.getUTCDate() - daysAgo;
 
         // Inject variables into string using ${}
-        return `http://statsapi.mlb.com/api/v1/schedule?hydrate=game(content(editorial(recap))),decisions&date=${year}-${month}-${dayOfMonth}&sportId=1`;
+        return `http://statsapi.mlb.com/api/v1/schedule?hydrate=game(content(editorial(recap))),decisions&date=${gmtYear}-${gmtMonth}-${gmtDayOfMonth}&sportId=1`;
     }
 
     // Use JSON info and start loading game items
@@ -41,8 +56,8 @@ class GameNavigator extends Component {
             // Iterate through games array and build a GameItem component for each
             games.forEach((game) => {
 
+                // Ensure we have a valid recap, otherwise do not show this game
                 if(game && game.content && game.content.editorial && game.content.editorial.recap) {
-
                     // Create and render new game item thumbnail
                     const gameItem = new GameItem(game.content);
                     gameItem.render(gameItems);
@@ -155,14 +170,12 @@ class GameNavigator extends Component {
 
     // Load JSON and use data to populate thumbnails
     render(parent) {
-        this.base = this.createElem("game-navigator");
-        parent.append(this.base);
+        this.base = this.createElem(["game-navigator"], parent); // Create base container
 
-        const gameItems = this.createElem("game-items");
-        this.base.append(gameItems);
+        const gameItems = this.createElem(["game-items"], this.base); // Container for games, which will move left/right from arrows
 
         // Load MLB JSON
-        const jsonUrl = this._loadTodaysGames(); // Inject today's date into url
+        const jsonUrl = this._loadGamesData(); // Inject today's date into url
         
         // Once promise is fulfilled, load games
         LoadJSON.load(jsonUrl)

@@ -9,7 +9,7 @@
     width: 160px;
 
     .headline, .desc {
-        margin: 1rem 0;
+        margin: 1rem 0 0 0;
         text-align: center;
         text-shadow: 0 5px 10px #000;
         word-break: break-word;
@@ -18,27 +18,26 @@
     }
 
     .headline {
-        font-size: 0.95rem;
         font-weight: 600;
         height: 55px;
         overflow: hidden;
     }
 
     .desc {
-        font-size: 0.65rem;
+        font-size: 0.95rem;
     }
 
     &.focus {
-
         height: 135px;
         margin-top: -10px;
         width: 240px;
 
         .headline, .desc {
+            color: $white;
             visibility: visible;
         }
         .box {
-            border-color: $highlight;
+            border: 2px solid $highlight;
         }
     }
 }

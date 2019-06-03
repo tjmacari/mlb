@@ -12,44 +12,49 @@ class GameItem extends Component {
         this.data = data;
     }
 
+    // Return base dom element
     getBase() {
         return this.base;
     }
 
+    // Render the component and place inside parent
     render(parent) {
-        this.base = this.createElem("game-item");
-        parent.append(this.base);
+        this.base = this.createElem(["game-item"], parent); // Create base/root dom element for game item
 
         // Create dom elements for headline, image box, and description text
         const elementsList = [
-            {
-                name: "headline"
-            }, {
-                name: "box"
-            }, {
-                name: "desc"
-            }
+            {name: "headline"}, // Index 0
+            {name: "box"},      // Index 1
+            {name: "desc"}      // Index 2
         ];
         elementsList.forEach((item) => {
-            item.elem = this.createElem(item.name); // Save element to list for reference later
-            this.base.append(item.elem); // Add to parent
+            item.elem = this.createElem([item.name], this.base); // Save element to list for reference later
         });
 
-        const d = this.data;
-        const recapData = d.editorial.recap.mlb;
+        const d = this.data.editorial; // Get game data
+        if(d && d.recap && d.recap && d.recap.mlb) {
 
-        // Apply headline
-        const headline = elementsList[0].elem;
-        headline.innerHTML = recapData.headline;
+            // Get recap data
+            const mlb = d.recap.mlb;
+            
+            // Grab info for headline, background image, and description
+            const headlineStr = mlb.headline;
+            const imageUrl = mlb.image.cuts[0].src;
+            const descStr = mlb.subhead || mlb.image.title; // Some recaps do not have a subhead, so default to image text
 
-        // Apply image
-        const box = elementsList[1].elem;
-        const img = recapData.image.cuts[0].src; // Locate image
-        box.style.backgroundImage = `url(${img})`; // Apply to thumbnail
+            // Apply headline
+            const headline = elementsList[0].elem; // Reference DOM element
+            headline.innerHTML = headlineStr;
 
-        // Apply desc
-        const desc = elementsList[2].elem;
-        desc.innerHTML = recapData.subhead;
+            // Apply image
+            const box = elementsList[1].elem; // Reference DOM element
+            box.style.backgroundImage = `url(${imageUrl})`; // Apply to thumbnail
+
+            // Apply desc
+            const desc = elementsList[2].elem; // Reference DOM element
+            desc.innerHTML = descStr; // Apply description
+        }
+
     }
 }
 export default GameItem;
