@@ -20,8 +20,8 @@ class GameNavigator extends Component {
 
     /*
         Only completed games with recaps will show up
-        PST is 7 hours ahead of GMT, ie: 4PM PST == 11PM GMT
-        With that in mind, unless it's between 8PM-12AM PST (3AM-7AM GMT), show yesterday's games
+        PST is 7 hours ahead of GMT, ie: 7PM EST == 11PM GMT
+        With that in mind, unless it's between 8PM-12AM EST (12AM-4AM GMT), show yesterday's games
     */
     _loadGamesData() {
 
@@ -29,10 +29,10 @@ class GameNavigator extends Component {
 
         // Since we deal with multiple times zones, let's work with GMT
         const gmtYear = date.getUTCFullYear();
-        const gmtMonth = date.getUTCMonth() + 1;
+        const gmtMonth = date.getUTCMonth() + 1; // Month is base-0, so add 1
         const gmtHourOfDay = date.getUTCHours();
-        const earliestHour = 3; // 3AM GMT (8PM PST)
-        const latestHour = 7; // 7AM GMT (12AM PST)
+        const earliestHour = 1; // 1AM GMT (9PM EST)
+        const latestHour = 4; // 4AM GMT (12AM EST)
 
         // In this case, worth spelling it out instead of ternary operator for ease of reading
         let daysAgo = 1; // Default to yesterday to get full slate of games
