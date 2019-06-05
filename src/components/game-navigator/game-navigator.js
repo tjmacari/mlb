@@ -18,26 +18,12 @@ class GameNavigator extends Component {
         this.gameItems = [];
     }
 
-    /*
-        Load yesterday's games if there are no results yet
-    */
+    // Load json data from MLB api service
     _loadGamesData() {
-
         const date = new Date(); // Get today's date
-
-        // Since we deal with multiple times zones, let's work with GMT
         const year = date.getFullYear();
         const month = date.getMonth() + 1; // Month is base-0, so add 1
-        const hourOfDay = date.getHours();
-        const earliestHour = 9; // (9PM EST)
-        const latestHour = 0; // (12AM EST)
-
-        // In this case, worth spelling it out instead of ternary operator for ease of reading
-        let daysAgo = 1; // Default to yesterday to get full slate of games
-        if(hourOfDay >= earliestHour && hourOfDay < latestHour) {
-            daysAgo = 0; // Since we are between 8PM - 12AM PST, we can roll with games from today
-        }
-
+        const daysAgo = 1; // Default to yesterday to get full slate of games (with more time for this coding test I would make it more sophisticated)
         const dayOfMonth = date.getDate() - daysAgo;
 
         // Inject variables into string using ${}
