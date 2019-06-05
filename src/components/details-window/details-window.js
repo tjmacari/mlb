@@ -24,22 +24,24 @@ class DetailsWindow extends Component {
     // Update content in details window
     update(gameInfo) {
         try {
-            const recap = gameInfo.editorial.recap.mlb;
+            const recap = gameInfo.editorial.recap && gameInfo.editorial.recap.mlb ? gameInfo.editorial.recap.mlb : null;
+            if(recap) {
+                // Get date, image url, headline string, and blurb text
+                const dateStr = new Date(recap.date).toDateString(); // ie: Wed May 29 2019
+                const imgUrl = recap.image.cuts[0].src;
+                const headlineStr = recap.headline;
+                const blurbStr = `${dateStr}<br/><br/>${recap.blurb}`;
+        
+                // Background image
+                this.setBgImage(this.content, imgUrl);
+        
+                // Apply headline
+                this.applyContent(this.headline, headlineStr);
+        
+                // Apply blurb
+                this.applyContent(this.blurb, blurbStr);
+            }
 
-            // Get date, image url, headline string, and blurb text
-            const dateStr = new Date(recap.date).toDateString(); // ie: Wed May 29 2019
-            const imgUrl = recap.image.cuts[0].src;
-            const headlineStr = recap.headline;
-            const blurbStr = `${dateStr}<br/><br/>${recap.blurb}`;
-    
-            // Background image
-            this.setBgImage(this.content, imgUrl);
-    
-            // Apply headline
-            this.applyContent(this.headline, headlineStr);
-    
-            // Apply blurb
-            this.applyContent(this.blurb, blurbStr);
         } catch(err) {
             console.error(err);
         }

@@ -19,31 +19,29 @@ class GameNavigator extends Component {
     }
 
     /*
-        Only completed games with recaps will show up
-        PST is 7 hours ahead of GMT, ie: 7PM EST == 11PM GMT
-        With that in mind, unless it's between 8PM-12AM EST (12AM-4AM GMT), show yesterday's games
+        Load yesterday's games if there are no results yet
     */
     _loadGamesData() {
 
         const date = new Date(); // Get today's date
 
         // Since we deal with multiple times zones, let's work with GMT
-        const gmtYear = date.getUTCFullYear();
-        const gmtMonth = date.getUTCMonth() + 1; // Month is base-0, so add 1
-        const gmtHourOfDay = date.getUTCHours();
-        const earliestHour = 1; // 1AM GMT (9PM EST)
-        const latestHour = 4; // 4AM GMT (12AM EST)
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // Month is base-0, so add 1
+        const hourOfDay = date.getHours();
+        const earliestHour = 9; // (9PM EST)
+        const latestHour = 0; // (12AM EST)
 
         // In this case, worth spelling it out instead of ternary operator for ease of reading
         let daysAgo = 1; // Default to yesterday to get full slate of games
-        if(gmtHourOfDay >= earliestHour && gmtHourOfDay < latestHour) {
+        if(hourOfDay >= earliestHour && hourOfDay < latestHour) {
             daysAgo = 0; // Since we are between 8PM - 12AM PST, we can roll with games from today
         }
 
-        const gmtDayOfMonth = date.getUTCDate() - daysAgo;
+        const dayOfMonth = date.getDate() - daysAgo;
 
         // Inject variables into string using ${}
-        return `http://statsapi.mlb.com/api/v1/schedule?hydrate=game(content(editorial(recap))),decisions&date=${gmtYear}-${gmtMonth}-${gmtDayOfMonth}&sportId=1`;
+        return `http://statsapi.mlb.com/api/v1/schedule?hydrate=game(content(editorial(recap))),decisions&date=${year}-${month}-${dayOfMonth}&sportId=1`;
     }
 
     // Use JSON info and start loading game items
